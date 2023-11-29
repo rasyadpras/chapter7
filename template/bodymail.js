@@ -27,7 +27,19 @@ const resetPasswordMailBody = () => {
     </p>`
 };
 
+const changePasswordSuccessMailBody = () => {
+    `<h2>Congratulation!</h2>
+    <p>
+        Your account password has been successfully changed.
+        If you didn't change you password, please contact us immediately by replying this email.
+
+        Thank you,
+        Admin
+    </p>`
+};
+
 module.exports = {
     welcomeMailBody,
     resetPasswordMailBody,
+    changePasswordSuccessMailBody,
 };

@@ -1,7 +1,10 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const Sentry = require('@sentry/node');
-const { sendResetPassword } = require('../libs/mailer');
+const {
+    sendResetPassword,
+    sendChangePasswordSuccess
+} = require('../libs/mailer');
 
 async function getUser(req, res) {
     try {
@@ -59,6 +62,7 @@ async function resetPassword(email, pass, res) {
                 password: pass
             }
         });
+        await sendChangePasswordSuccess(email);
         let response = ResponseTemplate(null, 'reset password success', null, 200);
         return res.status(200).json(response);
     } catch (error) {

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-const { resetPasswordMailBody, welcomeMailBody } = require('../template/bodymail');
+const { resetPasswordMailBody, welcomeMailBody, changePasswordSuccessMailBody } = require('../template/bodymail');
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -12,20 +12,6 @@ const transporter = nodemailer.createTransport({
         pass: process.env.PASS
     },
 });
-
-const sendResetPassword = async (email) => {
-    const mailOptions = {
-        from: process.env.EMAIL,
-        to: email,
-        subject: 'Reset Password',
-        html: resetPasswordMailBody,
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log(info.response);
-    console.log('Email sent to: ' + info.envelope.to);
-    return info;
-};
 
 const sendWelcome = async (email) => {
     const mailOptions = {
@@ -41,7 +27,36 @@ const sendWelcome = async (email) => {
     return info;
 };
 
+const sendResetPassword = async (email) => {
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Reset Password',
+        html: resetPasswordMailBody,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(info.response);
+    console.log('Email sent to: ' + info.envelope.to);
+    return info;
+};
+
+const sendChangePasswordSuccess = async (email) => {
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Change Password Success',
+        html: changePasswordSuccessMailBody,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(info.response);
+    console.log('Email sent to: ' + info.envelope.to);
+    return info;
+}
+
 module.exports = {
     sendWelcome,
     sendResetPassword,
+    sendChangePasswordSuccess,
 }
