@@ -1,10 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const bcrypt = require('bcrypt');
 const Sentry = require('@sentry/node');
 const {
     sendResetPassword,
     sendChangePasswordSuccess
 } = require('../libs/mailer');
+const { ResponseTemplate } = require('../template/response');
 
 async function getUser(req, res) {
     try {
@@ -37,8 +39,9 @@ async function getUser(req, res) {
     }
 };
 
-async function forgotPassword(email, res) {
+async function forgotPassword(req, res) {
     try {
+        const { email } = req.body;
         const user = await prisma.users.findUnique({ where: { email: email } });
         if (!user) {
             return res.json({message: 'email is not registered'})
@@ -52,14 +55,16 @@ async function forgotPassword(email, res) {
     }
 };
 
-async function resetPassword(email, pass, res) {
+async function resetPassword(req, res) {
     try {
+        const { email, password } = req.body;
+        const hashPass = await bcrypt.hash(password, 10);
         await prisma.users.update({
             where: {
                 email: email
             },
             data: {
-                password: pass
+                password: hashPass
             }
         });
         await sendChangePasswordSuccess(email);

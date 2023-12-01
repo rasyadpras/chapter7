@@ -10,7 +10,7 @@ router.use(morgan('dev'));
 
 router.use('/', authRoute);
 router.use('/user', userRoute);
-router.put('/forgot-password', checkValidateEmail, forgotPassword);
-router.put('/reset-password', checkResetPass, resetPassword);
+router.put('/forgot-password', forgotPassword);
+router.put('/reset-password', resetPassword);
 
 module.exports = router;
